@@ -20,12 +20,21 @@ local M = {}
 -- |
 
 M.Commit = Component.new(function(commit)
+  -- print(vim.api.nvim_eval('winwidth(0)'))
+    space_len = vim.api.nvim_eval('winwidth(0)') - string.len(commit.description[1]) -
+      string.len(commit.author_name) - string.len(("* "):rep(commit.level + 2)) - string.len(commit.committer_date) - 15
+    -- print(asterisk_len)
   return col {
     row { 
-      text(("* "):rep(commit.level + 1), { highlight = "Character" }), 
-      text(commit.oid:sub(1, 7), { highlight = "Number" }), 
-      text " ", 
-      text(commit.description[1]) 
+      text(("* "):rep(commit.level + 1), { highlight = "Character" }),
+      text(commit.oid:sub(1, 7), { highlight = "Number" }),
+      text " ",
+      text(commit.description[1]),
+      text((" "):rep(space_len)),
+      -- text(space_len),
+      text(commit.author_name, { highlight = "Number" }),
+      text "      ",
+      text(commit.committer_date, { highlight = "Character" })
     },
     col.hidden(true).padding_left((commit.level + 1) * 2) {
       row {
